@@ -87,24 +87,6 @@
             border: 8px solid white; border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15); overflow: hidden;
         }
-
-        /* --- FINAL MESSAGE (MODIFIED) --- */
-        .final-msg-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255,255,255,0.9); z-index: 200;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; pointer-events: none; transition: opacity 1.2s ease-out;
-        }
-        .final-msg-box {
-            position: relative; z-index: 205; text-align: center; padding: 40px;
-            background: white; border-radius: 20px; box-shadow: 0 15px 40px rgba(255, 92, 138, 0.2);
-            max-width: 85%; transform: scale(0.8) translateY(30px); opacity: 0;
-            transition: all 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .final-msg-container.show-final { opacity: 1; pointer-events: auto; }
-        .final-msg-container.show-final .final-msg-box { transform: scale(1) translateY(0); opacity: 1; }
-        .final-msg-box h1 { color: var(--primary); font-size: 2.2rem; margin-bottom: 15px; }
-        .final-msg-box p { font-size: 1.1rem; line-height: 1.7; color: #555; }
     </style>
 </head>
 <body onclick="playAudio()">
@@ -144,22 +126,6 @@
         <div class="scratch-box">
             <img src="photo7.jpg" style="width:100%; height:100%; object-fit:cover;">
             <canvas id="scratchCanvas" width="300" height="300" style="position:absolute; top:0; left:0; cursor:pointer;"></canvas>
-        </div>
-    </div>
-
-    <!-- หน้าต่างข้อความสุดท้าย -->
-    <div class="final-msg-container" id="finalMsgContainer">
-        <div class="final-msg-box">
-            <h1>เป็นแฟนกับเค้านะ💝</h1>
-            <p>หาครบหมดแล้วนะคนเก่ง!
-ทุกรูปที่เตงหาเจอ
-คือความทรงจำที่เค้าหวงแหนที่สุด
-ขอบคุณที่อยู่ข้างกัน และทำให้อะไรร้ายๆ
-กลายเป็นเรื่องที่ยิ้มได้
-
-“ เป็นแฟนกับเค้านะครับ “
-
-เค้ารักเตงที่สุดเลย!</strong></p>
         </div>
     </div>
 
@@ -226,7 +192,7 @@
             if(heartPercent >= 100) setTimeout(() => goTo('page3'), 600);
         }
 
-        // หน้า 3 Logic (ขูด 80% แล้วแสดงกล่องข้อความสุดท้ายทันที)
+        // หน้า 3 Logic (จบลงตรงนี้)
         function startScratch() {
             const c = document.getElementById('scratchCanvas'); const ctx = c.getContext('2d');
             ctx.fillStyle = '#ffacc5'; ctx.fillRect(0,0,300,300);
@@ -236,16 +202,6 @@
             let isDrawing = false;
             function scratch(x,y) {
                 ctx.globalCompositeOperation = 'destination-out'; ctx.beginPath(); ctx.arc(x,y,35,0,Math.PI*2); ctx.fill();
-                checkScratchProgress();
-            }
-            function checkScratchProgress() {
-                const d = ctx.getImageData(0,0,300,300).data;
-                let cleared = 0;
-                for(let i=3; i<d.length; i+=4) if(d[i]===0) cleared++;
-                if(cleared/(300*300) >= 0.8) { // เมื่อขูดถึง 80%
-                    // เปลี่ยนจากย้ายหน้า ไปเป็นแสดงกล่องข้อความบอกรักบอกแฟนทันที
-                    setTimeout(() => document.getElementById('finalMsgContainer').classList.add('show-final'), 500);
-                }
             }
             const move = (e) => { 
                 if(!isDrawing) return; 
